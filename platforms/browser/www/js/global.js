@@ -1,1 +1,1 @@
-static var GAME;
+var GAME;

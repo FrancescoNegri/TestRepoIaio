@@ -3,9 +3,17 @@ document.addEventListener('deviceready', function() {
         type: Phaser.WEBGL,
         autoResize: true,
         parent: 'game',
-        width: 800,
-        height: 480,
-        scene: [ Scene1 ]
+        width: 400,
+        height: 490,
+        scene: [ GameScene ],
+        physics: {
+            default: 'arcade',
+            arcade: {
+                debug: false,
+                gravity: { y: 1000 }
+            }
+        },
+        backgroundColor: '#71c5cf'
     };
     
     GAME = new Phaser.Game(config);

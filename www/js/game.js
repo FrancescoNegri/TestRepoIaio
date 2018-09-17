@@ -4,7 +4,7 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('bird', 'img/bird.png');
+        this.load.spritesheet('bird', 'img/bird.png', { frameWidth: 50, frameHeight: 50 });
         this.load.image('pipe', 'img/pipe.png');
     }
 
@@ -13,11 +13,17 @@ class GameScene extends Phaser.Scene {
         resize();
 
         this.score = 0;
-        this.labelScore = this.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff'}).setOrigin(0, 0);
+        this.labelScore = this.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' }).setOrigin(0, 0);
+        this.labelScore.setDepth(2);
 
-        this.bird = this.physics.add.sprite(100, 245, 'bird');
-        this.bird.setOrigin(0, 0);
-        this.bird.body.setOffset(this.bird.width / 2, this.bird.height / 2);
+        this.anims.create({ key: 'fly', frames: this.anims.generateFrameNumbers('bird', { frames: [0, 1, 2, 1] }), frameRate: 6, repeat: -1 });
+        this.anims.create({ key: 'die', frames: this.anims.generateFrameNumbers('bird', { frames: [0] })});
+
+        this.bird = this.physics.add.sprite(100, 245, 'bird').play('fly');
+        this.bird.setOrigin(-.2, .5);
+        this.bird.body.setOffset(this.bird.width / 2 + 12, this.bird.height / 2 - 25);
+        this.bird.alive = true;
+        this.bird.setDepth(1);
 
         this.pipes = this.physics.add.group();
 
@@ -25,7 +31,7 @@ class GameScene extends Phaser.Scene {
 
         this.input.on('pointerdown', () => { this.jump() }, this);
 
-        this.physics.add.overlap(this.bird, this.pipes, this.restart, null, this);
+        this.physics.add.overlap(this.bird, this.pipes, this.hitPipe, null, this);
     }
 
     update() {
@@ -34,6 +40,8 @@ class GameScene extends Phaser.Scene {
         this.pipes.getChildren().forEach(pipe => {
             if (pipe.x + pipe.width < 0) this.pipes.kill(pipe);
         });
+
+        if (this.bird.angle < 20) this.bird.angle++;
     }
 
     addOnePipe(x, y) {
@@ -41,6 +49,7 @@ class GameScene extends Phaser.Scene {
         this.pipes.add(pipe);
         pipe.body.setVelocityX(-200);
         pipe.body.setAllowGravity(false);
+        pipe.setDepth(0);
     }
 
     addRowofPipes() {
@@ -49,16 +58,36 @@ class GameScene extends Phaser.Scene {
             if (i != hole && i != hole + 1) this.addOnePipe(400, i * 60 + 10);
         }
         this.score++;
-        this.labelScore.text = this.score;
+        this.labelScore.text = this.score - 1;
     }
 
     jump() {
-        this.bird.body.velocity.y = -350;
+        if (this.bird.alive) {
+            this.bird.body.velocity.y = -350;
+            var animation = this.tweens.add({
+                targets: this.bird, angle: -20, duration: 100, callback: () => {
+                    console.log(this.bird.angle);
+                }
+            });
+        }
     }
 
     restart() {
         GAME.scene.stop('GameScene');
         GAME.scene.run('GameScene');
+    }
+
+    hitPipe() {
+        if (this.bird.alive) {
+            this.bird.play('die');
+            this.bird.alive = false;
+
+            this.timer.destroy();
+
+            this.pipes.getChildren().forEach(pipe => {
+                pipe.body.setVelocityX(0);
+            });
+        }
     }
 }
 

@@ -9,11 +9,12 @@ document.addEventListener('deviceready', function() {
         physics: {
             default: 'arcade',
             arcade: {
-                debug: true,
+                debug: false,
                 gravity: { y: 1000 }
             }
         },
-        backgroundColor: '#71c5cf'
+        backgroundColor: '#71c5cf',
+        pixelArt: true
     };
     
     GAME = new Phaser.Game(config);

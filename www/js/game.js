@@ -20,8 +20,9 @@ class GameScene extends Phaser.Scene {
         this.anims.create({ key: 'die', frames: this.anims.generateFrameNumbers('bird', { frames: [0] })});
 
         this.bird = this.physics.add.sprite(100, 245, 'bird').play('fly');
-        this.bird.setOrigin(-.2, .5);
-        this.bird.body.setOffset(this.bird.width / 2 + 12, this.bird.height / 2 - 25);
+        //this.bird.setOrigin(-.2, .5);
+        //this.bird.body.setOffset(this.bird.width / 2 + 12, this.bird.height / 2 - 25);
+        this.bird.body.setSize(35, 35);
         this.bird.alive = true;
         this.bird.setDepth(1);
 

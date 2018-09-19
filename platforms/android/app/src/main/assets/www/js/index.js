@@ -13,7 +13,8 @@ document.addEventListener('deviceready', function() {
                 gravity: { y: 1000 }
             }
         },
-        backgroundColor: '#71c5cf'
+        backgroundColor: '#71c5cf',
+        pixelArt: true
     };
     
     GAME = new Phaser.Game(config);

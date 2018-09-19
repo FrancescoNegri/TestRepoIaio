@@ -12,7 +12,7 @@ document.addEventListener('deviceready', function () {
             default: 'arcade',
             arcade: {
                 debug: true,
-                gravity: { y: 1000 }
+                gravity: { y: 1000 * SCALING_FACTOR}
             }
         },
         backgroundColor: '#71c5cf',

@@ -110,7 +110,7 @@ class GameScene extends Phaser.Scene {
     }
 }
 
-function resize() {
+ function resize() {
     var canvas = GAME.canvas, width = window.innerWidth, height = window.innerHeight;
     var wratio = width / height, ratio = canvas.width / canvas.height;
 
@@ -121,4 +121,4 @@ function resize() {
         canvas.style.width = (height * ratio) + "px";
         canvas.style.height = height + "px";
     }
-}  
+} 
